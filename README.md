@@ -1,35 +1,32 @@
-Markdown
-# MLOps Milestone 3: Automated ML Pipeline & Model Registry
-**Author**: Om Jagtap
+MLOps Milestone 3: Automated ML Pipeline & Model Registry
+Author: Om Jagtap
 
-## Setup Instructions
-1. Clone the repository to your local machine.
-2. Ensure Python 3.9+ is installed.
-3. Create a virtual environment and activate it:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
+Setup Instructions
+Clone the repository to your local machine.
+
+Ensure Python 3.9+ is installed.
+
+Create a virtual environment and activate it:
+python -m venv venv
+source venv/bin/activate
+
 Install all pinned dependencies:
-
-Bash
 pip install -r requirements.txt
-Initialize the Airflow database:
 
-Bash
+Initialize the Airflow database:
 export AIRFLOW_HOME=$(pwd)
 airflow db init
+
 How to Run the Pipeline
 Start the MLflow Tracking Server:
 Open a terminal and run:
-
-Bash
 mlflow ui --host 0.0.0.0 --port 5000
+
 Start Airflow:
 Open a separate terminal, set the Airflow home directory, and start the standalone server:
-
-Bash
 export AIRFLOW_HOME=$(pwd)
 airflow standalone
+
 Execute:
 Navigate to http://localhost:8080, log in using the generated admin credentials, unpause the train_pipeline DAG, and click the "Trigger" button.
 
@@ -43,7 +40,7 @@ MLflow: Serves as the experiment tracking backend and Model Registry. It logs al
 Scikit-Learn: Used to train the core machine learning model (iris-classifier).
 
 DAG Idempotency and Lineage Guarantees
-Idempotency: The Airflow tasks are designed to be fully idempotent. Re-running the train_pipeline DAG will not overwrite existing production data or cause system crashes. Instead, it generates a fresh MLflow run and registers a sequential model version (e.g., Version 1, Version 2) in the registry.
+Idempotency: The Airflow tasks are designed to be fully idempotent. Re-running the train_pipeline DAG will not overwrite existing production data or cause system crashes. Instead, it generates a fresh MLflow run and registers a sequential model version in the registry.
 
 Lineage Guarantees: Complete data and code lineage is maintained by hashing the input dataset. A unique data_hash (SHA256) is logged as a tag in every MLflow run, ensuring the exact data used for any model version can be traced and verified.
 
@@ -85,13 +82,8 @@ If a newly promoted model (e.g., Version 2) exhibits performance degradation in 
 
 Navigate to the MLflow Model Registry UI.
 
-Select the problematic model (Version 2) and transition its stage from Production to Archived.
+Select the problematic model and transition its stage from Production to Archived.
 
-Select the previous stable version (Version 1) and transition its stage back to Production.
+Select the previous stable version and transition its stage back to Production.
 
 Since the code is version-controlled via Git tags, operators can also run git checkout [stable_tag] to revert the entire pipeline codebase to the last known working state.
-
-
----
-
-**Would you like me to also provide the exact contents for the `.github/workflows/train_and_validate.yml` file so you can secure the final points for Part 2 of the rubric?**
